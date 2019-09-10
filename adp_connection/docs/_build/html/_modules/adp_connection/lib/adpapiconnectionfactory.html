@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>adp_connection.lib.adpapiconnectionfactory &mdash; ADP Client Connection Library 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="ADP Client Connection Library 1.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for adp_connection.lib.adpapiconnectionfactory</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># This file is part of adp-api-client.</span>
+<span class="c1"># https://github.com/adplabs/adp-connection-python</span>
+
+<span class="c1"># Copyright © 2015-2016 ADP, LLC.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the “License”);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an “AS IS” BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either</span>
+<span class="c1"># express or implied.  See the License for the specific language</span>
+<span class="c1"># governing permissions and limitations under the License.</span>
+
+<span class="kn">from</span> <span class="nn">adpapiconnection</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ADPAPIConnectionFactory"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnectionfactory.ADPAPIConnectionFactory">[docs]</a><span class="k">class</span> <span class="nc">ADPAPIConnectionFactory</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Creates a connection instance and returns either a</span>
+<span class="sd">    ClientCredentialsConnection or an AuthorizationCodeConnection</span>
+<span class="sd">    depending on the initialized connection configuration provided &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_objects</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;authorization_code&#39;</span><span class="p">:</span> <span class="n">AuthorizationCodeConnection</span><span class="p">,</span>
+                                   <span class="s1">&#39;client_credentials&#39;</span><span class="p">:</span> <span class="n">ClientCredentialsConnection</span><span class="p">}</span>
+
+<div class="viewcode-block" id="ADPAPIConnectionFactory.createConnection"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnectionfactory.ADPAPIConnectionFactory.createConnection">[docs]</a>    <span class="k">def</span> <span class="nf">createConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connConfig</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_objects</span><span class="p">[</span><span class="n">connConfig</span><span class="o">.</span><span class="n">getGrantType</span><span class="p">()](</span><span class="n">connConfig</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, ADP, LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>adp_connection.lib.connectionconfiguration &mdash; ADP Client Connection Library 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="ADP Client Connection Library 1.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for adp_connection.lib.connectionconfiguration</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># This file is part of adp-api-client.</span>
+<span class="c1"># https://github.com/adplabs/adp-connection-python</span>
+
+<span class="c1"># Copyright © 2015-2016 ADP, LLC.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the “License”);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an “AS IS” BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either</span>
+<span class="c1"># express or implied.  See the License for the specific language</span>
+<span class="c1"># governing permissions and limitations under the License.</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">connectexceptions</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="ConnectionConfiguration"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration">[docs]</a><span class="k">class</span> <span class="nc">ConnectionConfiguration</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for the connection configuration object.</span>
+
+<span class="sd">    Instance Variables:</span>
+<span class="sd">    config: a dictionary of all the configuration</span>
+<span class="sd">    parameters required for setting up a connection</span>
+<span class="sd">    initDone: tracks whether the configuration has been</span>
+<span class="sd">    initialized &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">({})</span>
+    <span class="n">initDone</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the dictionary keys:</span>
+<span class="sd">        clientID, clientSecret, sslCertPath, sslKeyPath, tokenServerURL,</span>
+<span class="sd">        apiRequestURL, baseAuthorizationURL, redirectURL, responseType,</span>
+<span class="sd">        scope, grantType, authorizationCode, disconnectURL &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;creating base config class&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authorizationCode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setClientID"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setClientID">[docs]</a>    <span class="k">def</span> <span class="nf">setClientID</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientID</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clientID</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setClientSecret"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setClientSecret">[docs]</a>    <span class="k">def</span> <span class="nf">setClientSecret</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">clientSecret</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clientSecret</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setSSLCertPath"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setSSLCertPath">[docs]</a>    <span class="k">def</span> <span class="nf">setSSLCertPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sslCertPath</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sslCertPath</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setSSLKeyPath"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setSSLKeyPath">[docs]</a>    <span class="k">def</span> <span class="nf">setSSLKeyPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sslKeyPath</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sslKeyPath</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setTokenServerURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setTokenServerURL">[docs]</a>    <span class="k">def</span> <span class="nf">setTokenServerURL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenServerURL</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tokenServerURL</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setApiRequestURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setApiRequestURL">[docs]</a>    <span class="k">def</span> <span class="nf">setApiRequestURL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apiRequestURL</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">apiRequestURL</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setDisconnectURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setDisconnectURL">[docs]</a>    <span class="k">def</span> <span class="nf">setDisconnectURL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disconnectURL</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">disconnectURL</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.setGrantType"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setGrantType">[docs]</a>    <span class="k">def</span> <span class="nf">setGrantType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grantType</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grantType</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getClientID"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getClientID">[docs]</a>    <span class="k">def</span> <span class="nf">getClientID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getClientSecret"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getClientSecret">[docs]</a>    <span class="k">def</span> <span class="nf">getClientSecret</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getSSLCertPath"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getSSLCertPath">[docs]</a>    <span class="k">def</span> <span class="nf">getSSLCertPath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getSSLKeyPath"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getSSLKeyPath">[docs]</a>    <span class="k">def</span> <span class="nf">getSSLKeyPath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getTokenServerURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getTokenServerURL">[docs]</a>    <span class="k">def</span> <span class="nf">getTokenServerURL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getApiRequestURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getApiRequestURL">[docs]</a>    <span class="k">def</span> <span class="nf">getApiRequestURL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getDisconnectURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getDisconnectURL">[docs]</a>    <span class="k">def</span> <span class="nf">getDisconnectURL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.getGrantType"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getGrantType">[docs]</a>    <span class="k">def</span> <span class="nf">getGrantType</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ConnectionConfiguration.init"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configObj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method to initialize the common config parameters:</span>
+<span class="sd">        clientID, clientSecret, sslCertPath, sslKeyPath,</span>
+<span class="sd">        tokenServerURL, apiRequestURL, disconnectURL and grantType.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">        configObj: dictionary containing the config values to be</span>
+<span class="sd">        initialized. &quot;&quot;&quot;</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Initializing Config Object&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;clientID&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setClientID</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientID&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;clientSecret&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setClientSecret</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;clientSecret&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;sslCertPath&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setSSLCertPath</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslCertPath&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;sslKeyPath&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setSSLKeyPath</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;sslKeyPath&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;tokenServerURL&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setTokenServerURL</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;tokenServerURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;disconnectURL&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setDisconnectURL</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;disconnectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;apiRequestURL&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setApiRequestURL</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;apiRequestURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;grantType&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setGrantType</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;client_credentials&#39;</span><span class="p">):</span>
+            <span class="n">ccConfig</span> <span class="o">=</span> <span class="n">ClientCredentialsConfiguration</span><span class="p">()</span>
+            <span class="n">ccConfig</span><span class="o">.</span><span class="n">initDone</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="n">ccConfig</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;grantType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;authorization_code&#39;</span><span class="p">):</span>
+            <span class="n">acConfig</span> <span class="o">=</span> <span class="n">AuthorizationCodeConfiguration</span><span class="p">()</span>
+            <span class="n">acConfig</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">configObj</span><span class="p">)</span>
+            <span class="n">acConfig</span><span class="o">.</span><span class="n">initDone</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">return</span> <span class="n">acConfig</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;grantTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="ClientCredentialsConfiguration"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.ClientCredentialsConfiguration">[docs]</a><span class="k">class</span> <span class="nc">ClientCredentialsConfiguration</span><span class="p">(</span><span class="n">ConnectionConfiguration</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Client credentials sub class of the ConnectionConfiguration object &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration">[docs]</a><span class="k">class</span> <span class="nc">AuthorizationCodeConfiguration</span><span class="p">(</span><span class="n">ConnectionConfiguration</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Authorization Code sub class of the ConnectionConfiguration object &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.init"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.init">[docs]</a>    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configObj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method to initialize additional configuration parameters</span>
+<span class="sd">        specific to the Authorization Code type application</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">        configObj: dictionary containing the Authorization Code specific</span>
+<span class="sd">        config values to be initialized. &quot;&quot;&quot;</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Initializing config object for Authorization Code type application&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;baseAuthorizationURL&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setBaseAuthorizationURL</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span>
+                              <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;redirectURL&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setRedirectURL</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;responseType&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;code&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setResponseType</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseTypeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;scope&#39;</span> <span class="ow">in</span> <span class="n">configObj</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;openid&#39;</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setScope</span><span class="p">(</span><span class="n">configObj</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scopeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scopeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+                <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scopeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scopeBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Conf Error: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.getBaseAuthorizationURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getBaseAuthorizationURL">[docs]</a>    <span class="k">def</span> <span class="nf">getBaseAuthorizationURL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.getRedirectURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getRedirectURL">[docs]</a>    <span class="k">def</span> <span class="nf">getRedirectURL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.getResponseType"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getResponseType">[docs]</a>    <span class="k">def</span> <span class="nf">getResponseType</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.getScope"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getScope">[docs]</a>    <span class="k">def</span> <span class="nf">getScope</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.getAuthorizationCode"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getAuthorizationCode">[docs]</a>    <span class="k">def</span> <span class="nf">getAuthorizationCode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authorizationCode&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.setBaseAuthorizationURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setBaseAuthorizationURL">[docs]</a>    <span class="k">def</span> <span class="nf">setBaseAuthorizationURL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">baseAuthorizationURL</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;baseAuthorizationURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">baseAuthorizationURL</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.setRedirectURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setRedirectURL">[docs]</a>    <span class="k">def</span> <span class="nf">setRedirectURL</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redirectURL</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;redirectURL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">redirectURL</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.setResponseType"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setResponseType">[docs]</a>    <span class="k">def</span> <span class="nf">setResponseType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">responseType</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;responseType&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">responseType</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.setScope"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setScope">[docs]</a>    <span class="k">def</span> <span class="nf">setScope</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scope</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;scope&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scope</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConfiguration.setAuthorizationCode"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setAuthorizationCode">[docs]</a>    <span class="k">def</span> <span class="nf">setAuthorizationCode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authorizationCode</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authorizationCode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">authorizationCode</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, ADP, LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

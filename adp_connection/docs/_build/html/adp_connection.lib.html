@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>adp_connection.lib package &mdash; ADP Client Connection Library 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="ADP Client Connection Library 1.0.0 documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-adp_connection.lib">
+<span id="adp-connection-lib-package"></span><h1>adp_connection.lib package<a class="headerlink" href="#module-adp_connection.lib" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-adp_connection.lib.adpapiconnection">
+<span id="adp-connection-lib-adpapiconnection-module"></span><h2>adp_connection.lib.adpapiconnection module<a class="headerlink" href="#module-adp_connection.lib.adpapiconnection" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.adpapiconnection.</code><code class="descname">ADPAPIConnection</code><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for maintaining ADP connection status and information</p>
+<p>Instance Variables:
+connection: dictionary storing the connection status and access-token information
+connectionConfiguration: instance of the ConnectionConfiguration class
+that was used to instantiate the connection</p>
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a POST to the ADP Token Server URL with necessary options and data
+like grant_type, ssl certificates, clientID and clientSecret. Upon a
+successful response, updates the connection information with the appropriate
+status and access-token data. Also sets to sessionState if not already set.
+On an unsuccessful attempt a ConnectError exception is raised</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.connection">
+<code class="descname">connection</code><em class="property"> = {'status': 'availabe', 'token': '', 'expires': '', 'type': 'unknown', 'sessionState': ''}</em><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.connection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.connectionConfiguration">
+<code class="descname">connectionConfiguration</code><em class="property"> = None</em><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.connectionConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.disconnect">
+<code class="descname">disconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.disconnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a logout request to ADP if an access-token is present
+and resets the connection instance variable for the connection</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.getAccessToken">
+<code class="descname">getAccessToken</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.getAccessToken"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.getAccessToken" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns: the access-token (Bearer Token) that was obtained
+as a result of a successful connection. Returns and empty
+string if no access-token is present</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.getConfig">
+<code class="descname">getConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.getConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.getConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns: the Connection Configuration object associated
+with the connection. The object maybe either ClientCredentialsConfiguration
+or AuthorizationCodeConfiguration depending on the type of
+application</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.getExpiration">
+<code class="descname">getExpiration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.getExpiration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.getExpiration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns: the expiration date-time of the access-token
+as a datetime type. Returns an empty string if no
+access-token exists</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.getSessionState">
+<code class="descname">getSessionState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.getSessionState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.getSessionState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns: the session state identifier that may have been
+generated either automatically, or user-defined when the connect()
+is successful</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.isConnectedIndicator">
+<code class="descname">isConnectedIndicator</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.isConnectedIndicator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.isConnectedIndicator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns: a boolen depending on whether the connection
+is &#8216;connected&#8217; or not</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.setSessionState">
+<code class="descname">setSessionState</code><span class="sig-paren">(</span><em>sessionState</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ADPAPIConnection.setSessionState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.setSessionState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inputs:
+sessionState: a string that uniquely identifies a session (e.g. a UUID)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adp_connection.lib.adpapiconnection.ADPAPIConnection.userAgent">
+<code class="descname">userAgent</code><em class="property"> = 'adp-userinfo-python/1.0.1'</em><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection.userAgent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="adp_connection.lib.adpapiconnection.AuthorizationCodeConnection">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.adpapiconnection.</code><code class="descname">AuthorizationCodeConnection</code><span class="sig-paren">(</span><em>connConfig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#AuthorizationCodeConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.AuthorizationCodeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection" title="adp_connection.lib.adpapiconnection.ADPAPIConnection"><code class="xref py py-class docutils literal"><span class="pre">adp_connection.lib.adpapiconnection.ADPAPIConnection</span></code></a></p>
+<p>Extends the ADPAPIConnection base class for an Authorization Code type application</p>
+<p>Attributes:
+connConfig: instance of AuthorizationCodeConfiguration</p>
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.AuthorizationCodeConnection.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#AuthorizationCodeConnection.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.AuthorizationCodeConnection.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a POST to the ADP Token Server URL with necessary options. These
+options are a little different from those sent for the client_credentials app.
+These include client_id, client_secret, grant_type, code (authorization_code),
+redirect_uri, and SSL certificates. Upon a successful response, updates the
+connection information with the appropriate status and access-token data.
+Also sets to sessionState if not already set.
+On an unsuccessful attempt a ConnectError exception is raised</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnection.AuthorizationCodeConnection.getAuthorizationURL">
+<code class="descname">getAuthorizationURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#AuthorizationCodeConnection.getAuthorizationURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.AuthorizationCodeConnection.getAuthorizationURL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a URL that must be used for redirecting the user&#8217;s browser to
+for allowing them to login into ADP. The query parameters of the url are
+client_id, response_type, redirect_uri, scope and state. All the parameters
+except for state are obtained from the configuration object that was used for
+creating the connection.
+The state parameter is meant for allowing tracking of the session between the
+stateless http calls. If it has not been previously set to a user-defined
+value, it is set to a UUID when this method is called</p>
+<p>Returns: string representing the URL for redirecting the browser</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="adp_connection.lib.adpapiconnection.ClientCredentialsConnection">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.adpapiconnection.</code><code class="descname">ClientCredentialsConnection</code><span class="sig-paren">(</span><em>connConfig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnection.html#ClientCredentialsConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnection.ClientCredentialsConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adp_connection.lib.adpapiconnection.ADPAPIConnection" title="adp_connection.lib.adpapiconnection.ADPAPIConnection"><code class="xref py py-class docutils literal"><span class="pre">adp_connection.lib.adpapiconnection.ADPAPIConnection</span></code></a></p>
+<p>Extends the ADPAPIConnection base class for a Client Credentials type application</p>
+<p>Attributes:
+connConfig: instance of ClientCredentialsConfiguration</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-adp_connection.lib.adpapiconnectionfactory">
+<span id="adp-connection-lib-adpapiconnectionfactory-module"></span><h2>adp_connection.lib.adpapiconnectionfactory module<a class="headerlink" href="#module-adp_connection.lib.adpapiconnectionfactory" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="adp_connection.lib.adpapiconnectionfactory.ADPAPIConnectionFactory">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.adpapiconnectionfactory.</code><code class="descname">ADPAPIConnectionFactory</code><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnectionfactory.html#ADPAPIConnectionFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnectionfactory.ADPAPIConnectionFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a connection instance and returns either a
+ClientCredentialsConnection or an AuthorizationCodeConnection
+depending on the initialized connection configuration provided</p>
+<dl class="method">
+<dt id="adp_connection.lib.adpapiconnectionfactory.ADPAPIConnectionFactory.createConnection">
+<code class="descname">createConnection</code><span class="sig-paren">(</span><em>connConfig</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/adpapiconnectionfactory.html#ADPAPIConnectionFactory.createConnection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.adpapiconnectionfactory.ADPAPIConnectionFactory.createConnection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-adp_connection.lib.connectexceptions">
+<span id="adp-connection-lib-connectexceptions-module"></span><h2>adp_connection.lib.connectexceptions module<a class="headerlink" href="#module-adp_connection.lib.connectexceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="adp_connection.lib.connectexceptions.ConfigError">
+<em class="property">exception </em><code class="descclassname">adp_connection.lib.connectexceptions.</code><code class="descname">ConfigError</code><span class="sig-paren">(</span><em>cname</em>, <em>code</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectexceptions.html#ConfigError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectexceptions.ConfigError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adp_connection.lib.connectexceptions.Error" title="adp_connection.lib.connectexceptions.Error"><code class="xref py py-class docutils literal"><span class="pre">adp_connection.lib.connectexceptions.Error</span></code></a></p>
+<p>Exception raised for errors in initializing the
+connection configuration.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="adp_connection.lib.connectexceptions.ConnectError">
+<em class="property">exception </em><code class="descclassname">adp_connection.lib.connectexceptions.</code><code class="descname">ConnectError</code><span class="sig-paren">(</span><em>cname</em>, <em>code</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectexceptions.html#ConnectError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectexceptions.ConnectError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adp_connection.lib.connectexceptions.Error" title="adp_connection.lib.connectexceptions.Error"><code class="xref py py-class docutils literal"><span class="pre">adp_connection.lib.connectexceptions.Error</span></code></a></p>
+<p>Exception raised for errors in connecting to ADP.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="adp_connection.lib.connectexceptions.Error">
+<em class="property">exception </em><code class="descclassname">adp_connection.lib.connectexceptions.</code><code class="descname">Error</code><span class="sig-paren">(</span><em>cname</em>, <em>code</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectexceptions.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectexceptions.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Base class for exceptions in this module.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>cname &#8211; class in which the error occurred
+code &#8211; error code
+msg &#8211; error message</dd>
+</dl>
+<dl class="attribute">
+<dt id="adp_connection.lib.connectexceptions.Error.errDict">
+<code class="descname">errDict</code><em class="property"> = {'sslKeyPath': {'errCode': 'ConfErr-004', 'errMsg': 'sslKeyPath not set'}, 'clientSecret': {'errCode': 'ConfErr-002', 'errMsg': 'clientSecret not set'}, 'grantType': {'errCode': 'ConfErr-008', 'errMsg': 'grantType not set'}, 'scopeBad': {'errCode': 'ConfErr-013', 'errMsg': 'incorrect scope'}, 'tokenServerURL': {'errCode': 'ConfErr-005', 'errMsg': 'tokenServerURL not set'}, 'initBad': {'errCode': 'ConfErr-014', 'errMsg': 'configuration not inited'}, 'disconnectURL': {'errCode': 'ConfErr-007', 'errMsg': 'disconnectURL not set'}, 'clientID': {'errCode': 'ConfErr-001', 'errMsg': 'clientID not set'}, 'responseTypeBad': {'errCode': 'ConfErr-013', 'errMsg': 'incorrect responseType'}, 'sslCertPath': {'errCode': 'ConfErr-003', 'errMsg': 'sslCertPath not set'}, 'scope': {'errCode': 'ConfErr-012', 'errMsg': 'scope not set'}, 'redirectURL': {'errCode': 'ConfErr-010', 'errMsg': 'redirectURL not set'}, 'responseType': {'errCode': 'ConfErr-011', 'errMsg': 'responseType not set'}, 'baseAuthorizationURL': {'errCode': 'ConfErr-009', 'errMsg': 'baseAuthorizationURL not set'}, 'apiRequestURL': {'errCode': 'ConfErr-006', 'errMsg': 'apiRequestURL not set'}, 'grantTypeBad': {'errCode': 'ConfErr-013', 'errMsg': 'incorrect grant type'}}</em><a class="headerlink" href="#adp_connection.lib.connectexceptions.Error.errDict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-adp_connection.lib.connectionconfiguration">
+<span id="adp-connection-lib-connectionconfiguration-module"></span><h2>adp_connection.lib.connectionconfiguration module<a class="headerlink" href="#module-adp_connection.lib.connectionconfiguration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.connectionconfiguration.</code><code class="descname">AuthorizationCodeConfiguration</code><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration" title="adp_connection.lib.connectionconfiguration.ConnectionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">adp_connection.lib.connectionconfiguration.ConnectionConfiguration</span></code></a></p>
+<p>Authorization Code sub class of the ConnectionConfiguration object</p>
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getAuthorizationCode">
+<code class="descname">getAuthorizationCode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.getAuthorizationCode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getAuthorizationCode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getBaseAuthorizationURL">
+<code class="descname">getBaseAuthorizationURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.getBaseAuthorizationURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getBaseAuthorizationURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getRedirectURL">
+<code class="descname">getRedirectURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.getRedirectURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getRedirectURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getResponseType">
+<code class="descname">getResponseType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.getResponseType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getResponseType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getScope">
+<code class="descname">getScope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.getScope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.getScope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>configObj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to initialize additional configuration parameters
+specific to the Authorization Code type application</p>
+<p>Attributes:
+configObj: dictionary containing the Authorization Code specific
+config values to be initialized.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setAuthorizationCode">
+<code class="descname">setAuthorizationCode</code><span class="sig-paren">(</span><em>authorizationCode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.setAuthorizationCode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setAuthorizationCode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setBaseAuthorizationURL">
+<code class="descname">setBaseAuthorizationURL</code><span class="sig-paren">(</span><em>baseAuthorizationURL</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.setBaseAuthorizationURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setBaseAuthorizationURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setRedirectURL">
+<code class="descname">setRedirectURL</code><span class="sig-paren">(</span><em>redirectURL</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.setRedirectURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setRedirectURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setResponseType">
+<code class="descname">setResponseType</code><span class="sig-paren">(</span><em>responseType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.setResponseType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setResponseType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setScope">
+<code class="descname">setScope</code><span class="sig-paren">(</span><em>scope</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#AuthorizationCodeConfiguration.setScope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.AuthorizationCodeConfiguration.setScope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="adp_connection.lib.connectionconfiguration.ClientCredentialsConfiguration">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.connectionconfiguration.</code><code class="descname">ClientCredentialsConfiguration</code><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ClientCredentialsConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ClientCredentialsConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration" title="adp_connection.lib.connectionconfiguration.ConnectionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">adp_connection.lib.connectionconfiguration.ConnectionConfiguration</span></code></a></p>
+<p>Client credentials sub class of the ConnectionConfiguration object</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration">
+<em class="property">class </em><code class="descclassname">adp_connection.lib.connectionconfiguration.</code><code class="descname">ConnectionConfiguration</code><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for the connection configuration object.</p>
+<p>Instance Variables:
+config: a dictionary of all the configuration
+parameters required for setting up a connection
+initDone: tracks whether the configuration has been
+initialized</p>
+<dl class="attribute">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.config">
+<code class="descname">config</code><em class="property"> = {}</em><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getApiRequestURL">
+<code class="descname">getApiRequestURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getApiRequestURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getApiRequestURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getClientID">
+<code class="descname">getClientID</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getClientID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getClientID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getClientSecret">
+<code class="descname">getClientSecret</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getClientSecret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getClientSecret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getDisconnectURL">
+<code class="descname">getDisconnectURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getDisconnectURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getDisconnectURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getGrantType">
+<code class="descname">getGrantType</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getGrantType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getGrantType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getSSLCertPath">
+<code class="descname">getSSLCertPath</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getSSLCertPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getSSLCertPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getSSLKeyPath">
+<code class="descname">getSSLKeyPath</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getSSLKeyPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getSSLKeyPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getTokenServerURL">
+<code class="descname">getTokenServerURL</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.getTokenServerURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.getTokenServerURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>configObj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to initialize the common config parameters:
+clientID, clientSecret, sslCertPath, sslKeyPath,
+tokenServerURL, apiRequestURL, disconnectURL and grantType.</p>
+<p>Attributes:
+configObj: dictionary containing the config values to be
+initialized.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.initDone">
+<code class="descname">initDone</code><em class="property"> = False</em><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.initDone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setApiRequestURL">
+<code class="descname">setApiRequestURL</code><span class="sig-paren">(</span><em>apiRequestURL</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setApiRequestURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setApiRequestURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setClientID">
+<code class="descname">setClientID</code><span class="sig-paren">(</span><em>clientID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setClientID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setClientID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setClientSecret">
+<code class="descname">setClientSecret</code><span class="sig-paren">(</span><em>clientSecret</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setClientSecret"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setClientSecret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setDisconnectURL">
+<code class="descname">setDisconnectURL</code><span class="sig-paren">(</span><em>disconnectURL</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setDisconnectURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setDisconnectURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setGrantType">
+<code class="descname">setGrantType</code><span class="sig-paren">(</span><em>grantType</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setGrantType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setGrantType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setSSLCertPath">
+<code class="descname">setSSLCertPath</code><span class="sig-paren">(</span><em>sslCertPath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setSSLCertPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setSSLCertPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setSSLKeyPath">
+<code class="descname">setSSLKeyPath</code><span class="sig-paren">(</span><em>sslKeyPath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setSSLKeyPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setSSLKeyPath" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setTokenServerURL">
+<code class="descname">setTokenServerURL</code><span class="sig-paren">(</span><em>tokenServerURL</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/adp_connection/lib/connectionconfiguration.html#ConnectionConfiguration.setTokenServerURL"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#adp_connection.lib.connectionconfiguration.ConnectionConfiguration.setTokenServerURL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">adp_connection.lib package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-adp_connection.lib.adpapiconnection">adp_connection.lib.adpapiconnection module</a></li>
+<li><a class="reference internal" href="#module-adp_connection.lib.adpapiconnectionfactory">adp_connection.lib.adpapiconnectionfactory module</a></li>
+<li><a class="reference internal" href="#module-adp_connection.lib.connectexceptions">adp_connection.lib.connectexceptions module</a></li>
+<li><a class="reference internal" href="#module-adp_connection.lib.connectionconfiguration">adp_connection.lib.connectionconfiguration module</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/adp_connection.lib.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, ADP, LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/adp_connection.lib.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

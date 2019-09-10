@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>adp_connection.lib.adpapiconnection &mdash; ADP Client Connection Library 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="ADP Client Connection Library 1.0.0 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for adp_connection.lib.adpapiconnection</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># This file is part of adp-api-client.</span>
+<span class="c1"># https://github.com/adplabs/adp-connection-python</span>
+
+<span class="c1"># Copyright © 2015-2016 ADP, LLC.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the “License”);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an “AS IS” BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either</span>
+<span class="c1"># express or implied.  See the License for the specific language</span>
+<span class="c1"># governing permissions and limitations under the License.</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">connectexceptions</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">connectionconfiguration</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">adp_connection</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+
+<div class="viewcode-block" id="ADPAPIConnection"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection">[docs]</a><span class="k">class</span> <span class="nc">ADPAPIConnection</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for maintaining ADP connection status and information</span>
+
+<span class="sd">    Instance Variables:</span>
+<span class="sd">    connection: dictionary storing the connection status and access-token information</span>
+<span class="sd">    connectionConfiguration: instance of the ConnectionConfiguration class</span>
+<span class="sd">    that was used to instantiate the connection &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;availabe&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;expires&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;sessionState&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+    <span class="n">connectionConfiguration</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">userAgent</span> <span class="o">=</span> <span class="s1">&#39;adp-userinfo-python/&#39;</span> <span class="o">+</span> <span class="n">__version__</span>
+
+<div class="viewcode-block" id="ADPAPIConnection.isConnectedIndicator"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.isConnectedIndicator">[docs]</a>    <span class="k">def</span> <span class="nf">isConnectedIndicator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns: a boolen depending on whether the connection</span>
+<span class="sd">        is &#39;connected&#39; or not &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;connected&#39;</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.getAccessToken"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.getAccessToken">[docs]</a>    <span class="k">def</span> <span class="nf">getAccessToken</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns: the access-token (Bearer Token) that was obtained</span>
+<span class="sd">        as a result of a successful connection. Returns and empty</span>
+<span class="sd">        string if no access-token is present &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.getExpiration"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.getExpiration">[docs]</a>    <span class="k">def</span> <span class="nf">getExpiration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns: the expiration date-time of the access-token</span>
+<span class="sd">        as a datetime type. Returns an empty string if no</span>
+<span class="sd">        access-token exists &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;expires&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.getSessionState"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.getSessionState">[docs]</a>    <span class="k">def</span> <span class="nf">getSessionState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns: the session state identifier that may have been</span>
+<span class="sd">        generated either automatically, or user-defined when the connect()</span>
+<span class="sd">        is successful &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;sessionState&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.getConfig"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.getConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns: the Connection Configuration object associated</span>
+<span class="sd">        with the connection. The object maybe either ClientCredentialsConfiguration</span>
+<span class="sd">        or AuthorizationCodeConfiguration depending on the type of</span>
+<span class="sd">        application &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectionConfiguration</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.setSessionState"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.setSessionState">[docs]</a>    <span class="k">def</span> <span class="nf">setSessionState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sessionState</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Inputs:</span>
+<span class="sd">        sessionState: a string that uniquely identifies a session (e.g. a UUID) &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;sessionState&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sessionState</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.connect"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sends a POST to the ADP Token Server URL with necessary options and data</span>
+<span class="sd">        like grant_type, ssl certificates, clientID and clientSecret. Upon a</span>
+<span class="sd">        successful response, updates the connection information with the appropriate</span>
+<span class="sd">        status and access-token data. Also sets to sessionState if not already set.</span>
+<span class="sd">        On an unsuccessful attempt a ConnectError exception is raised &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">initDone</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;connecting without config init&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;initBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;initBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">formData</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getGrantType</span><span class="p">()}</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;user-agent&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">userAgent</span><span class="p">}</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getTokenServerURL</span><span class="p">(),</span>
+                              <span class="n">headers</span><span class="o">=</span><span class="p">(</span><span class="n">headers</span><span class="p">),</span>
+                              <span class="n">cert</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getSSLCertPath</span><span class="p">(),</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getSSLKeyPath</span><span class="p">()),</span>
+                              <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getClientID</span><span class="p">(),</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getClientSecret</span><span class="p">()),</span>
+                              <span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="n">formData</span><span class="p">))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">ok</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;connected&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;expires&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSessionState</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">setSessionState</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">()))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConnectError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">),</span> <span class="s1">&#39;Unable to connect to ADP&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ADPAPIConnection.disconnect"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ADPAPIConnection.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sends a logout request to ADP if an access-token is present</span>
+<span class="sd">        and resets the connection instance variable for the connection &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getAccessToken</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;user-agent&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">userAgent</span><span class="p">}</span>            
+            <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getDisconnectURL</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;?id_token_hint=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getAccessToken</span><span class="p">(),</span>
+                             <span class="n">headers</span><span class="o">=</span><span class="p">(</span><span class="n">headers</span><span class="p">))</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;ready&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;unknown&#39;</span><span class="p">,</span> <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;expires&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;state&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span></div></div>
+
+
+<div class="viewcode-block" id="ClientCredentialsConnection"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.ClientCredentialsConnection">[docs]</a><span class="k">class</span> <span class="nc">ClientCredentialsConnection</span><span class="p">(</span><span class="n">ADPAPIConnection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extends the ADPAPIConnection base class for a Client Credentials type application</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    connConfig: instance of ClientCredentialsConfiguration &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connConfig</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the instance variables with client_credentials information &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">connConfig</span><span class="o">.</span><span class="n">getGrantType</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;client_credentials&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;client_credentials&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ready&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connectionConfiguration</span> <span class="o">=</span> <span class="n">connConfig</span></div>
+
+
+<div class="viewcode-block" id="AuthorizationCodeConnection"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.AuthorizationCodeConnection">[docs]</a><span class="k">class</span> <span class="nc">AuthorizationCodeConnection</span><span class="p">(</span><span class="n">ADPAPIConnection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Extends the ADPAPIConnection base class for an Authorization Code type application</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">    connConfig: instance of AuthorizationCodeConfiguration &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connConfig</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the instance variables with authorization_code information &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">connConfig</span><span class="o">.</span><span class="n">getGrantType</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;authorization_code&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;authorization_code&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ready&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connectionConfiguration</span> <span class="o">=</span> <span class="n">connConfig</span>
+
+<div class="viewcode-block" id="AuthorizationCodeConnection.getAuthorizationURL"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.AuthorizationCodeConnection.getAuthorizationURL">[docs]</a>    <span class="k">def</span> <span class="nf">getAuthorizationURL</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generates a URL that must be used for redirecting the user&#39;s browser to</span>
+<span class="sd">        for allowing them to login into ADP. The query parameters of the url are</span>
+<span class="sd">        client_id, response_type, redirect_uri, scope and state. All the parameters</span>
+<span class="sd">        except for state are obtained from the configuration object that was used for</span>
+<span class="sd">        creating the connection.</span>
+<span class="sd">        The state parameter is meant for allowing tracking of the session between the</span>
+<span class="sd">        stateless http calls. If it has not been previously set to a user-defined</span>
+<span class="sd">        value, it is set to a UUID when this method is called</span>
+
+<span class="sd">        Returns: string representing the URL for redirecting the browser &quot;&quot;&quot;</span>
+        <span class="n">authorizationURL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getBaseAuthorizationURL</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;?client_id=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getClientID</span><span class="p">()</span>
+        <span class="n">authorizationURL</span> <span class="o">=</span> <span class="n">authorizationURL</span> <span class="o">+</span> <span class="s1">&#39;&amp;response_type=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getResponseType</span><span class="p">()</span>
+        <span class="n">authorizationURL</span> <span class="o">=</span> <span class="n">authorizationURL</span> <span class="o">+</span> <span class="s1">&#39;&amp;redirect_uri=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getRedirectURL</span><span class="p">()</span>
+        <span class="n">authorizationURL</span> <span class="o">=</span> <span class="n">authorizationURL</span> <span class="o">+</span> <span class="s1">&#39;&amp;scope=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getScope</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSessionState</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">authorizationURL</span> <span class="o">=</span> <span class="n">authorizationURL</span> <span class="o">+</span> <span class="s1">&#39;&amp;state=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">authorizationURL</span> <span class="o">=</span> <span class="n">authorizationURL</span> <span class="o">+</span> <span class="s1">&#39;&amp;state=&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSessionState</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">authorizationURL</span></div>
+
+<div class="viewcode-block" id="AuthorizationCodeConnection.connect"><a class="viewcode-back" href="../../../adp_connection.lib.html#adp_connection.lib.adpapiconnection.AuthorizationCodeConnection.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sends a POST to the ADP Token Server URL with necessary options. These</span>
+<span class="sd">        options are a little different from those sent for the client_credentials app.</span>
+<span class="sd">        These include client_id, client_secret, grant_type, code (authorization_code),</span>
+<span class="sd">        redirect_uri, and SSL certificates. Upon a successful response, updates the</span>
+<span class="sd">        connection information with the appropriate status and access-token data.</span>
+<span class="sd">        Also sets to sessionState if not already set.</span>
+<span class="sd">        On an unsuccessful attempt a ConnectError exception is raised &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">initDone</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;connecting without config init&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;initBad&#39;</span><span class="p">][</span><span class="s1">&#39;errCode&#39;</span><span class="p">],</span> <span class="n">Error</span><span class="o">.</span><span class="n">errDict</span><span class="p">[</span><span class="s1">&#39;initBad&#39;</span><span class="p">][</span><span class="s1">&#39;errMsg&#39;</span><span class="p">])</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;user-agent&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">userAgent</span><span class="p">}</span>
+        <span class="n">formData</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;client_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getClientID</span><span class="p">(),</span>
+                    <span class="s1">&#39;client_secret&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getClientSecret</span><span class="p">(),</span>
+                    <span class="s1">&#39;grant_type&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getGrantType</span><span class="p">(),</span>
+                    <span class="s1">&#39;code&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getAuthorizationCode</span><span class="p">(),</span>
+                    <span class="s1">&#39;redirect_uri&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getRedirectURL</span><span class="p">()}</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getTokenServerURL</span><span class="p">(),</span>
+                          <span class="n">headers</span><span class="o">=</span><span class="p">(</span><span class="n">headers</span><span class="p">),</span>
+                          <span class="n">cert</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getSSLCertPath</span><span class="p">(),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getSSLKeyPath</span><span class="p">()),</span>
+                          <span class="n">data</span><span class="o">=</span><span class="p">(</span><span class="n">formData</span><span class="p">),</span>
+                          <span class="n">verify</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getConfig</span><span class="p">()</span><span class="o">.</span><span class="n">getSSLCertPath</span><span class="p">()))</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="n">requests</span><span class="o">.</span><span class="n">codes</span><span class="o">.</span><span class="n">ok</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;connected&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">[</span><span class="s1">&#39;expires&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSessionState</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setSessionState</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid1</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConnectError</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span>  <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="p">),</span> <span class="s1">&#39;Unable to connect to ADP&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, ADP, LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
