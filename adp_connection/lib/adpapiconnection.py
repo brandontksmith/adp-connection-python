@@ -94,8 +94,7 @@ class ADPAPIConnection(object):
                                     self.getConfig().getSSLKeyPath()),
                               auth=(self.getConfig().getClientID(),
                                     self.getConfig().getClientSecret()),
-                              data=(formData),
-                              verify=False)
+                              data=(formData))
             logging.debug(r.status_code)
             logging.debug(r.json())
             if (r.status_code == requests.codes.ok):
@@ -192,7 +191,7 @@ class AuthorizationCodeConnection(ADPAPIConnection):
                                 self.getConfig().getSSLKeyPath()),
                           data=(formData),
                           verify=False)
-        
+
         logging.debug(r.status_code)
         logging.debug(r.json())
         if (r.status_code == requests.codes.ok):
