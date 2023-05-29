@@ -85,8 +85,10 @@ class httpHandler(BaseHTTPRequestHandler):
                     resp = ''
                     print("Passed Factory.createConnection")
                     # try to connect and send the response back
-                    ccConnection.connect()
-                    print("Attempting Connection...")
+                    try:
+                        ccConnection.connect()
+                    except Exception as e:
+                        print(e)
                     if (ccConnection.isConnectedIndicator()):
 
                         # A successful connection generates a UUID as a session identifier
@@ -113,7 +115,7 @@ class httpHandler(BaseHTTPRequestHandler):
                     resp = resp + '<br>Class: ' + connecterr.cname
                     resp = resp + '<br>Error: ' + connecterr.code
                     resp = resp + '<br>Message: ' + connecterr.msg
-                except Error as e:
+                except Exception as e:
                     print(e)
                 finally:
                     self.send_response(200)
@@ -273,7 +275,6 @@ class httpHandler(BaseHTTPRequestHandler):
 
         except IOError as e:
             self.send_error(404, 'File Not Found: %s' % self.path)
-            print(e)
 
 try:
     # Create a web server and define the handler to manage the
