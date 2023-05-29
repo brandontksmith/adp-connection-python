@@ -83,9 +83,10 @@ class httpHandler(BaseHTTPRequestHandler):
                     ccConnection = ADPAPIConnectionFactory().createConnection(ClientCredentialsConfiguration)
 
                     resp = ''
-
+                    print("Passed Factory.createConnection")
                     # try to connect and send the response back
                     ccConnection.connect()
+                    print("Attempting Connection...")
                     if (ccConnection.isConnectedIndicator()):
 
                         # A successful connection generates a UUID as a session identifier
@@ -112,11 +113,14 @@ class httpHandler(BaseHTTPRequestHandler):
                     resp = resp + '<br>Class: ' + connecterr.cname
                     resp = resp + '<br>Error: ' + connecterr.code
                     resp = resp + '<br>Message: ' + connecterr.msg
+                except Error as e:
+                    print(e)
                 finally:
                     self.send_response(200)
                     self.send_header('Content-type', 'text/html')
                     self.end_headers()
-                    self.wfile.write(resp)
+                    print(resp)
+                    self.wfile.write(bytes(resp, "utf-8"))
                     return
 
             # Handle request for an Authorization Code App
@@ -257,16 +261,19 @@ class httpHandler(BaseHTTPRequestHandler):
 
             if sendReply is True:
                 # Open the static file requested and send it
-                f = open(curdir + sep + self.path)
-                self.send_response(200)
-                self.send_header('Content-type', mimetype)
-                self.end_headers()
-                self.wfile.write(f.read())
-                f.close()
+                with open( curdir + sep + self.path, "rb") as f:
+                    print(f)
+                    print(type(f))
+                    self.send_response(200)
+                    self.send_header('Content-type', mimetype)
+                    self.end_headers()
+                    self.wfile.writelines(f.readlines())
+                    f.close()
             return
 
-        except IOError:
+        except IOError as e:
             self.send_error(404, 'File Not Found: %s' % self.path)
+            print(e)
 
 try:
     # Create a web server and define the handler to manage the
