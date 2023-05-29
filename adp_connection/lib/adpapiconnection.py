@@ -104,6 +104,7 @@ class ADPAPIConnection(object):
                 self.connection['expires'] = datetime.datetime.now() + datetime.timedelta(0, r.json()['expires_in'], 0)
                 if self.getSessionState() == '':
                     self.setSessionState(str(uuid.uuid1()))
+                system.stdout.write("Connected")
             else:
                 raise ConnectError(self.__class__.__name__, str(r.status_code), 'Unable to connect to ADP')
 
